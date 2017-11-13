@@ -119,10 +119,9 @@ public class Tabuleiro extends javax.swing.JPanel {
                 pecaPreta=new Botao();
                 if((i==j || j==i-100 || i==j-100 || i==j-200 || j==i-200 || i==j-300 || j==i-300 || (i==400 && j==0))&& j<=100){
                     pecaPreta.setLocation(new Point(i,j));
+                    pecaPretas.add(new Point(i,j));
                     pecaPreta.setBackground(Color.red);
                     pecaPreta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aula06/preta.PNG")));  
-                    pecaPretas.add(new Point(i,j));
-                    //System.out.println(pecaPretas);
                     this.add(pecaPreta);
                 }              
                 pecaPreta.addActionListener(new java.awt.event.ActionListener() {
@@ -155,9 +154,39 @@ public class Tabuleiro extends javax.swing.JPanel {
                 contClickP++; 
                 pontoAnte.y=ponto1.y;
                 pontoAnte.x=ponto1.x;
-            }/*else if(ponto1 == pecaBrancas.get(verificaPecaBranca())){
-                
-            }*/else if((ponto1.y==pontoAnte.y+50)&&(ponto1.x==pontoAnte.x+50 || ponto1.x==pontoAnte.x-50) && 0 != contClickP){
+            }else if((ponto1.y==pontoAnte.y+100)&&(ponto1.x==pontoAnte.x+100 /*|| ponto1.x==pontoAnte.x-100*/) && 0 != contClickP){
+                Point ponto = new Point();
+                ponto=pontoAnte;
+                ponto.y+=50;
+                ponto.x+=50;
+                int posicao = verificaPecaBranca(ponto);
+                if(posicao!=-1){
+                    apagaPecaBranca(posicao);
+                    jogador = 1;
+                    jLabel1.setText("jogador "+jogador);
+                    contClickP=0;
+                    ImageIcon ima = new ImageIcon(getClass().getResource("preta.PNG"));
+                    bt.setIcon(ima);
+                    mudaLocalizacaoPreta();
+                }else
+                    JOptionPane.showMessageDialog(null,"jogada invalida");
+            }else if((ponto1.y==pontoAnte.y+100)&&(/*ponto1.x==pontoAnte.x+100 ||*/ ponto1.x==pontoAnte.x-100) && 0 != contClickP){
+                Point ponto = new Point();
+                ponto=pontoAnte;
+                ponto.y+=50;
+                ponto.x-=50;
+                int posicao = verificaPecaBranca(ponto);
+                if(posicao!=-1){
+                    apagaPecaBranca(posicao);
+                    jogador = 1;
+                    jLabel1.setText("jogador "+jogador);
+                    contClickP=0;
+                    ImageIcon ima = new ImageIcon(getClass().getResource("preta.PNG"));
+                    bt.setIcon(ima); 
+                    mudaLocalizacaoPreta();
+                }else
+                    JOptionPane.showMessageDialog(null,"jogada invalida"); 
+            }else if((ponto1.y==pontoAnte.y+50)&&(ponto1.x==pontoAnte.x+50 || ponto1.x==pontoAnte.x-50) && 0 != contClickP){
                 if(-1!=verificaPecaPreta()){
                     JOptionPane.showMessageDialog(null,"jogada invalida");
                 }else{
@@ -167,8 +196,7 @@ public class Tabuleiro extends javax.swing.JPanel {
                     jogador = 1;
                     jLabel1.setText("jogador "+jogador);
                     mudaLocalizacaoPreta();
-                }
-                
+                }   
             }else if(pontoAnte.y==ponto1.y &&  pontoAnte.x==ponto1.x){
                 contClickP=0; 
                 ImageIcon ima = new ImageIcon(getClass().getResource("preta.PNG"));
@@ -180,14 +208,14 @@ public class Tabuleiro extends javax.swing.JPanel {
     }
     public void jogadorBranco(JButton bt){
         if(ponto1.x==ponto1.y || ponto1.y==ponto1.x-100 || ponto1.x==ponto1.y-100 || ponto1.x==ponto1.y-200 || ponto1.y==ponto1.x-200 || ponto1.x==ponto1.y-300 || ponto1.y==ponto1.x-300){
-            if(contClickB==0 && -1!=verificaPecaBranca()){
+            if(contClickB==0 && -1!=verificaPecaBranca(ponto1)){
                 ImageIcon ima = new ImageIcon(getClass().getResource(""));
                 bt.setIcon(ima);
                 contClickB++;
                 pontoAnte.y=ponto1.y;
                 pontoAnte.x=ponto1.x;
             }else if((ponto1.y==pontoAnte.y-50)&&(ponto1.x==pontoAnte.x-50 || ponto1.x==pontoAnte.x+50) && contClickB != 0){
-                if(-1!=verificaPecaBranca()){
+                if(-1!=verificaPecaBranca(ponto1)){
                     JOptionPane.showMessageDialog(null,"jogada invalida");
                 }
                 else{
@@ -198,7 +226,7 @@ public class Tabuleiro extends javax.swing.JPanel {
                     contClickB=0;
                     mudaLocalizacaoBranca();
                 }
-            }else if(pontoAnte.y==ponto1.y &&  pontoAnte.x==ponto1.x && -1!=verificaPecaBranca() && contClickB != 0){
+            }else if(pontoAnte.y==ponto1.y &&  pontoAnte.x==ponto1.x && -1!=verificaPecaBranca(ponto1) && contClickB != 0){
                 contClickB=0; 
                 ImageIcon ima = new ImageIcon(getClass().getResource("branca.PNG"));
                 bt.setIcon(ima);
@@ -207,10 +235,10 @@ public class Tabuleiro extends javax.swing.JPanel {
            //System.out.println();
         }  
     }
-    public int verificaPecaBranca(){
+    public int verificaPecaBranca(Point veri){
        //System.out.println(pecaBrancas);
        for(int i=0;i<quantiPecaB;i++){
-            if( true ==pecaBrancas.get(i).equals(ponto1)){
+            if( true ==pecaBrancas.get(i).equals(veri)){
                 //System.out.println(i+" teste "+pecaBrancas.get(i));
                 return i;
             }
@@ -247,6 +275,20 @@ public class Tabuleiro extends javax.swing.JPanel {
                 pecaPretas.add(new Point(ponto1));
             }
         }
+    }
+    public void apagaPecaBranca(int posicao){
+       pecaBrancas.remove(posicao);
+       quantiPecaB--;
+       if(quantiPecaB ==0){
+           JOptionPane.showMessageDialog(null,"jogador "+jogador+" ganhou!");
+       }
+    }
+    public void apagaPecaPreta(int posicao){
+       pecaPretas.remove(posicao);
+       quantiPecaP--;
+       if(quantiPecaP ==0){
+           JOptionPane.showMessageDialog(null,"jogador "+jogador+" ganhou!");
+       }
     }
     
     /**
