@@ -155,9 +155,9 @@ public class Tabuleiro extends javax.swing.JPanel {
                 contClickP++; 
                 pontoAnte.y=ponto1.y;
                 pontoAnte.x=ponto1.x;
-            }else if(ponto1 == pecaBrancas.get(verificaPecaBranca())){
+            }/*else if(ponto1 == pecaBrancas.get(verificaPecaBranca())){
                 
-            }else if((ponto1.y==pontoAnte.y+50)&&(ponto1.x==pontoAnte.x+50 || ponto1.x==pontoAnte.x-50) && 0 != contClickP){
+            }*/else if((ponto1.y==pontoAnte.y+50)&&(ponto1.x==pontoAnte.x+50 || ponto1.x==pontoAnte.x-50) && 0 != contClickP){
                 if(-1!=verificaPecaPreta()){
                     JOptionPane.showMessageDialog(null,"jogada invalida");
                 }else{
@@ -215,8 +215,7 @@ public class Tabuleiro extends javax.swing.JPanel {
                 return i;
             }
         }
-        return 
-                -1;
+        return -1;
     }
     public int verificaPecaPreta(){
        for(int i=0;i<quantiPecaP;i++){
