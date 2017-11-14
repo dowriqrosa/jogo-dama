@@ -41,33 +41,50 @@ public class Tabuleiro extends javax.swing.JPanel {
     ArrayList<JButton> pecas;
     ArrayList<Point> pecaPretas;
     ArrayList<Point> pecaBrancas;
+    ArrayList<Localizacao> loc;
     public Tabuleiro() {
         initComponents();
         pecas=new ArrayList<>();
         pecaPretas=new ArrayList<>();
         pecaBrancas=new ArrayList<>();
+        loc = new ArrayList<>();
         adicionarTabuleiro();
     }
-
+    JButton peca; 
     
     private void adicionarTabuleiro(){
-        int contB=0, contP=0;
-        JButton peca; 
         for(int i=0;i<=400;i+=50){
             for(int j=0;j<=400;j+=50){
                 peca=new Botao();
                 if(i==j || j==i-100 || i==j-100 || i==j-200 || j==i-200 || i==j-300 || j==i-300){
                    peca.setBackground(Color.red);    
                 }
-                if((i==j || j==i-100 || i==j-100 || i==j-200 || j==i-200 || i==j-300 || j==i-300)&&(j<=350 && j>=250)&& contB == 0){
-                    addPecasBranca();
-                    contB++;
-                }else if((i==j || j==i-100 || i==j-100 || i==j-200 || j==i-200 || i==j-300 || j==i-300 || (i==400 && j==0)) && j<=100 && contP==0){
-                    addPecasPretas();
-                    contP++;
+                if((i==j || j==i-100 || i==j-100 || i==j-200 || j==i-200 || i==j-300 || j==i-300)&&(j<=350 && j>=250)){
+                    peca.setBackground(Color.red);
+                    peca.setLocation(new Point(i,j));
+                    pecaBrancas.add(new Point(i,j));
+                    peca.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aula06/branca.PNG")));  
+                    this.add(peca);
+                    peca.addActionListener(new java.awt.event.ActionListener() {
+                        public void actionPerformed(java.awt.event.ActionEvent evt) {
+                            ActionPerformed(evt);
+                        }
+                    }); 
+                }else if((i==j || j==i-100 || i==j-100 || i==j-200 || j==i-200 || i==j-300 || j==i-300 || (i==400 && j==0)) && j<=100){
+                    peca.setBackground(Color.red);
+                    peca.setLocation(new Point(i,j));
+                    peca.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aula06/preta.PNG")));  
+                    this.add(peca);
+                    pecaPretas.add(new Point(i,j));
+                    peca.addActionListener(new java.awt.event.ActionListener() {
+                        public void actionPerformed(java.awt.event.ActionEvent evt) {
+                            ActionPerformed(evt);
+                        }
+                    }); 
                 }else{
                     peca.setLocation(new Point(i,j));
                     this.add(peca);
+                    pecas.add(peca);
                 }
                 peca.addActionListener(new java.awt.event.ActionListener() {
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -91,55 +108,14 @@ public class Tabuleiro extends javax.swing.JPanel {
 //        pecaBrancas.add(new Point(350,250));
 //        System.out.println(pecaBrancas);
     }
-    public void addPecasBranca(){
-        JButton pecaBranca;
-        for(int i=0;i<=400;i+=50){
-            for(int j=0;j<=400;j+=50){
-                pecaBranca=new Botao();
-                if((i==j || j==i-100 || i==j-100 || i==j-200 || j==i-200 || i==j-300 || j==i-300)&&(j<=350 && j>=250)){
-                    pecaBranca.setBackground(Color.red);
-                    pecaBranca.setLocation(new Point(i,j));
-                    pecaBranca.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aula06/branca.PNG")));  
-                    this.add(pecaBranca);
-                    pecaBrancas.add(new Point(i,j));
-                }
-                pecaBranca.addActionListener(new java.awt.event.ActionListener() {
-                    public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        ActionPerformed(evt);
-                    }
-                });   
-            }
-        }
-        
-    }
-    public void addPecasPretas(){
-        JButton pecaPreta;
-        for(int i=0;i<=400;i+=50){
-            for(int j=0;j<=400;j+=50){
-                pecaPreta=new Botao();
-                if((i==j || j==i-100 || i==j-100 || i==j-200 || j==i-200 || i==j-300 || j==i-300 || (i==400 && j==0))&& j<=100){
-                    pecaPreta.setLocation(new Point(i,j));
-                    pecaPretas.add(new Point(i,j));
-                    pecaPreta.setBackground(Color.red);
-                    pecaPreta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aula06/preta.PNG")));  
-                    this.add(pecaPreta);
-                }              
-                pecaPreta.addActionListener(new java.awt.event.ActionListener() {
-                    @Override
-                    public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        ActionPerformed(evt);
-                    }
-                    
-                }); 
-            }
-        }
-        
-    }
     public void ActionPerformed(java.awt.event.ActionEvent evt) {
+        Localizacao  loca = new Localizacao();
         JButton bt=(JButton)evt.getSource();
         System.out.println("X: "+bt.getX()+"  Y: "+bt.getY());
-        ponto1.x=bt.getX();
-        ponto1.y=bt.getY();
+        ponto1.x = bt.getX();
+        ponto1.y = bt.getY();
+        loca.ponto=bt.getLocation();
+        loc.add(loca);
         if(jogador==1)
             jogadorBranco(bt);
         else
@@ -161,6 +137,8 @@ public class Tabuleiro extends javax.swing.JPanel {
                 ponto.x+=50;
                 int posicao = verificaPecaBranca(ponto);
                 if(posicao!=-1){
+                    //pecaBrancas.get(posicao).;
+                    
                     apagaPecaBranca(posicao);
                     jogador = 1;
                     jLabel1.setText("jogador "+jogador);
@@ -202,15 +180,13 @@ public class Tabuleiro extends javax.swing.JPanel {
                 ImageIcon ima = new ImageIcon(getClass().getResource("preta.PNG"));
                 bt.setIcon(ima);
             }
-          // System.out.println(ponto1.x+" "+ ponto1.y); 
-           
         }
     }
     public void jogadorBranco(JButton bt){
-        if(ponto1.x==ponto1.y || ponto1.y==ponto1.x-100 || ponto1.x==ponto1.y-100 || ponto1.x==ponto1.y-200 || ponto1.y==ponto1.x-200 || ponto1.x==ponto1.y-300 || ponto1.y==ponto1.x-300){
-            if(contClickB==0 && -1!=verificaPecaBranca(ponto1)){
+        if((ponto1.x==ponto1.y || ponto1.y==ponto1.x-100 || ponto1.x==ponto1.y-100 || ponto1.x==ponto1.y-200 || ponto1.y==ponto1.x-200 || ponto1.x==ponto1.y-300 || ponto1.y==ponto1.x-300)&&(ponto1.y<=350 && ponto1.y>=250)){
+            if(contClickB==0 /*&& -1!=verificaPecaBranca(ponto1)*/){
                 ImageIcon ima = new ImageIcon(getClass().getResource(""));
-                bt.setIcon(ima);
+                bt.setIcon(new javax.swing.ImageIcon(getClass().getResource("")));  
                 contClickB++;
                 pontoAnte.y=ponto1.y;
                 pontoAnte.x=ponto1.x;
@@ -231,15 +207,11 @@ public class Tabuleiro extends javax.swing.JPanel {
                 ImageIcon ima = new ImageIcon(getClass().getResource("branca.PNG"));
                 bt.setIcon(ima);
             }
-           //System.out.println(ponto1.x+" "+ ponto1.y); 
-           //System.out.println();
         }  
     }
     public int verificaPecaBranca(Point veri){
-       //System.out.println(pecaBrancas);
        for(int i=0;i<quantiPecaB;i++){
             if( true ==pecaBrancas.get(i).equals(veri)){
-                //System.out.println(i+" teste "+pecaBrancas.get(i));
                 return i;
             }
         }
@@ -254,19 +226,12 @@ public class Tabuleiro extends javax.swing.JPanel {
         return -1;
     }
     public void mudaLocalizacaoBranca(){
-        //System.out.println("antes da mudanca"+pecaBrancas);
         for(int i=0;i<quantiPecaB;i++){
             if( true ==pontoAnte.equals(pecaBrancas.get(i))){
-                //System.out.println(pecaBrancas.get(i)+" antiga");
                 pecaBrancas.remove(i);
-                //System.out.println(pecaBrancas+" numeros");
                 pecaBrancas.add(new Point(ponto1));
-                //System.out.println("nova localizacao "+pecaBrancas.get(quantiPecaB-1));
             }
-            //System.out.println(pecaBrancas.get(i)+" numeros");
-            //System.out.println(ponto1);
-        }
-         //System.out.println("depois da mudanca"+pecaBrancas);
+        }   
     }
     public void mudaLocalizacaoPreta(){
         for(int i=0;i<quantiPecaP;i++){
@@ -277,6 +242,12 @@ public class Tabuleiro extends javax.swing.JPanel {
         }
     }
     public void apagaPecaBranca(int posicao){
+       for (int i=0; i<loc.size();i++){
+           if(true == loc.get(i).ponto.equals(pecaBrancas.get(posicao))){
+               ImageIcon ima = new ImageIcon(getClass().getResource(""));
+               loc.get(i).peca.setIcon(ima);
+           }
+       }
        pecaBrancas.remove(posicao);
        quantiPecaB--;
        if(quantiPecaB ==0){
