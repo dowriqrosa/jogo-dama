@@ -116,6 +116,7 @@ public class Tabuleiro extends javax.swing.JPanel {
         ponto1.x = bt.getX();
         ponto1.y = bt.getY();
         loca.ponto=bt.getLocation();
+        loca.peca=bt;
         loc.add(loca);
         if(jogador==1)
             jogadorBranco(bt);
@@ -243,7 +244,7 @@ public class Tabuleiro extends javax.swing.JPanel {
     public void apagaPecaBranca(int posicao){
        for (int i=0; i<loc.size();i++){
            if(true == loc.get(i).ponto.equals(pecaBrancas.get(posicao))){
-              ImageIcon ima = new ImageIcon(getClass().getResource("preta.PNG"));
+              ImageIcon ima = new ImageIcon(getClass().getResource(""));
               loc.get(i).peca.setIcon(ima);
                //ImageIcon ima = new ImageIcon(getClass().getResource(""));
                //loc.get(i).peca.setIcon(new javax.swing.ImageIcon(getClass().getResource("")));
