@@ -36,8 +36,8 @@ public class Tabuleiro extends javax.swing.JPanel {
     int contClickP=0;
     int pontoy=0;
     int pontox=0;
-    private int quantiPecaB=13;
-    private int quantiPecaP=13;
+    //private int quantiPecaB=13;
+    //private int quantiPecaP=13;
     ArrayList<JButton> pecas;
     ArrayList<Point> pecaPretas;
     ArrayList<Point> pecaBrancas;
@@ -210,7 +210,7 @@ public class Tabuleiro extends javax.swing.JPanel {
         }  
     }
     public int verificaPecaBranca(Point veri){
-       for(int i=0;i<quantiPecaB;i++){
+       for(int i=0;i<pecaBrancas.size();i++){
             if( true ==pecaBrancas.get(i).equals(veri)){
                 return i;
             }
@@ -246,21 +246,22 @@ public class Tabuleiro extends javax.swing.JPanel {
            if(true == loc.get(i).ponto.equals(pecaBrancas.get(posicao))){
               ImageIcon ima = new ImageIcon(getClass().getResource(""));
               loc.get(i).peca.setIcon(ima);
-               //ImageIcon ima = new ImageIcon(getClass().getResource(""));
-               //loc.get(i).peca.setIcon(new javax.swing.ImageIcon(getClass().getResource("")));
-               //loc.get(i).peca.setBackground(Color.yellow);
            }
        }
        pecaBrancas.remove(posicao);
-       quantiPecaB--;
-       if(quantiPecaB ==0){
+       if(pecaBrancas.size() == 0){
            JOptionPane.showMessageDialog(null,"jogador "+jogador+" ganhou!");
        }
     }
     public void apagaPecaPreta(int posicao){
+        for (int i=0; i<loc.size();i++){
+           if(true == loc.get(i).ponto.equals(pecaPretas.get(posicao))){
+              ImageIcon ima = new ImageIcon(getClass().getResource(""));
+              loc.get(i).peca.setIcon(ima);
+           }
+       }
        pecaPretas.remove(posicao);
-       quantiPecaP--;
-       if(quantiPecaP ==0){
+       if(pecaPretas.size() ==0){
            JOptionPane.showMessageDialog(null,"jogador "+jogador+" ganhou!");
        }
     }
