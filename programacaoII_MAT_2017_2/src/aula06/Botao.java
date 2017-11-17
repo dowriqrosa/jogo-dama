@@ -5,11 +5,13 @@ import javax.swing.JButton;
 
 /**
  *
- * @author Dowriqrosa
+ * @author Pedro Kislansky
  */
 public class Botao extends JButton{
 
     public Botao() {
         this.setSize(50,50);
-    } 
+    }
+
+    
 }

@@ -6,315 +6,332 @@
 package aula06;
 
 import java.awt.Color;
-import java.awt.Image;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
-
 /**
  *
- * @author Dowriqrosa
+ * @author Pedro Kislansky
  */
 public class Tabuleiro extends javax.swing.JPanel {
 
     /**
      * Creates new form Tabuleiro
      */
-    Point ponto1 = new Point();
-    private final Point pontoAnte = new Point();
-    //Point posicao = new Point();
-    int jogador=1;
-    int contClickB=0;
-    int contClickP=0;
-    int pontoy=0;
-    int pontox=0;
-    //private int quantiPecaB=13;
-    //private int quantiPecaP=13;
-    ArrayList<JButton> pecas;
-    ArrayList<Point> pecaPretas;
     ArrayList<Point> pecaBrancas;
+    ArrayList<Point> pecaPretas;
     ArrayList<Localizacao> loc;
+    ArrayList<JButton> pecas;
+    private int jogador=0;
+    private int click=0;
+    int retornoAnt;
+    Point locaAnterior = new Point();
+    Point ponto = new Point();
+    ImageIcon imaV = new ImageIcon(getClass().getResource(""));
+    ImageIcon imaP = new ImageIcon(getClass().getResource("preta.PNG"));
+    ImageIcon imaB = new ImageIcon(getClass().getResource("branca.PNG"));
     public Tabuleiro() {
-        initComponents();
-        pecas=new ArrayList<>();
-        pecaPretas=new ArrayList<>();
-        pecaBrancas=new ArrayList<>();
+        pecaBrancas = new ArrayList<>();
+        pecaPretas = new ArrayList<>();
         loc = new ArrayList<>();
-        adicionarTabuleiro();
+        pecas = new ArrayList<>();
+        initComponents();
+        adicionarPecas();
     }
-    JButton peca; 
+
     
-    private void adicionarTabuleiro(){
+    private void adicionarPecas(){
+        JButton peca;
         for(int i=0;i<=400;i+=50){
             for(int j=0;j<=400;j+=50){
                 peca=new Botao();
-                if(i==j || j==i-100 || i==j-100 || i==j-200 || j==i-200 || i==j-300 || j==i-300){
-                   peca.setBackground(Color.red);    
-                }
-                if((i==j || j==i-100 || i==j-100 || i==j-200 || j==i-200 || i==j-300 || j==i-300)&&(j<=350 && j>=250)){
+                peca.setLocation(new Point(i,j));
+                if((i==j || j==i-100 || i==j-100 || i==j-200 || j==i-200 || i==j-300 || j==i-300) && i<400){
                     peca.setBackground(Color.red);
-                    peca.setLocation(new Point(i,j));
-                    pecaBrancas.add(new Point(i,j));
-                    peca.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aula06/branca.PNG")));  
-                    this.add(peca);
-//                    peca.addActionListener(new java.awt.event.ActionListener() {
-//                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                            ActionPerformed(evt);
-//                        }
-//                    }); 
-                   // System.out.println(pecaBrancas);
-                }else if((i==j || j==i-100 || i==j-100 || i==j-200 || j==i-200 || i==j-300 || j==i-300 || (i==400 && j==0)) && j<=100){
-                    peca.setBackground(Color.red);
-                    peca.setLocation(new Point(i,j));
-                    peca.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aula06/preta.PNG")));  
-                    this.add(peca);
-                    pecaPretas.add(new Point(i,j));
-//                    peca.addActionListener(new java.awt.event.ActionListener() {
-//                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                            ActionPerformed(evt);
-//                        }
-//                    }); 
+                    if(j<=350 && j>=250){
+                        pecaBrancas.add(peca.getLocation());
+                        peca.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aula06/branca.PNG")));
+                    }else if(j<=100){
+                        pecaPretas.add(peca.getLocation());
+                        peca.setIcon(new javax.swing.ImageIcon(getClass().getResource("/aula06/preta.PNG")));
+                    }
                 }else{
-                    peca.setLocation(new Point(i,j));
-                    this.add(peca);
-                    pecas.add(peca);
+                    peca.setBackground(new Color(255,255,255));
                 }
                 peca.addActionListener(new java.awt.event.ActionListener() {
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
                         ActionPerformed(evt);
                     }
-                });
+                }); 
+                this.add(peca);
+                pecas.add(peca);
+                
             }
         }
-//        pecaBrancas.add(new Point(50,350));
-//        pecaBrancas.add(new Point(150,350));
-//        pecaBrancas.add(new Point(250,350));
-//        pecaBrancas.add(new Point(350,350));
-//        pecaBrancas.add(new Point(0,300));
-//        pecaBrancas.add(new Point(100,300));
-//        pecaBrancas.add(new Point(200,300));
-//        pecaBrancas.add(new Point(300,300));
-//        pecaBrancas.add(new Point(400,300));
-//        pecaBrancas.add(new Point(50,250));
-//        pecaBrancas.add(new Point(150,250));
-//        pecaBrancas.add(new Point(250,250));
-//        pecaBrancas.add(new Point(350,250));
-//        System.out.println(pecaBrancas);
-    }
-    public void ActionPerformed(java.awt.event.ActionEvent evt) {
-        Localizacao  loca = new Localizacao();
-        JButton bt=(JButton)evt.getSource();
-        System.out.println("X: "+bt.getX()+"  Y: "+bt.getY());
-        ponto1.x = bt.getX();
-        ponto1.y = bt.getY();
-        loca.ponto=bt.getLocation();
-        loca.peca=bt;
-        loc.add(loca);
-        if(jogador==1)
-            jogadorBranco(bt);
-        else
-            jogadorPreto(bt);
+        
     }
     
-    public void jogadorPreto(JButton bt){
-        if(ponto1.x==ponto1.y || ponto1.y==ponto1.x-100 || ponto1.x==ponto1.y-100 || ponto1.x==ponto1.y-200 || ponto1.y==ponto1.x-200 || ponto1.x==ponto1.y-300 || ponto1.y==ponto1.x-300||(ponto1.x==400 && ponto1.y==0)){
-            if(contClickP==0 && -1!=verificaPecaPreta(ponto1)){
-                ImageIcon ima = new ImageIcon(getClass().getResource(""));
-                bt.setIcon(ima);
-                contClickP++; 
-                pontoAnte.y=ponto1.y;
-                pontoAnte.x=ponto1.x;
-            }else if((ponto1.y==pontoAnte.y+100)&&(ponto1.x==pontoAnte.x+100 /*|| ponto1.x==pontoAnte.x-100*/) && 0 != contClickP){
-                Point ponto = new Point();
-                ponto=pontoAnte;
-                ponto.y+=50;
-                ponto.x+=50;
-                int posicao = verificaPecaBranca(ponto);
-                if(posicao!=-1){
-                    //pecaBrancas.get(posicao).;    
-                    apagaPecaBranca(posicao);
-                    jogador = 1;
-                    jLabel1.setText("jogador "+jogador);
-                    contClickP=0;
-                    ImageIcon ima = new ImageIcon(getClass().getResource("preta.PNG"));
-                    bt.setIcon(ima);
-                    mudaLocalizacaoPreta();
-                }else
-                    JOptionPane.showMessageDialog(null,"jogada invalida");
-            }else if((ponto1.y==pontoAnte.y+100)&&(/*ponto1.x==pontoAnte.x+100 ||*/ ponto1.x==pontoAnte.x-100) && 0 != contClickP){
-                Point ponto = new Point();
-                ponto=pontoAnte;
-                ponto.y+=50;
-                ponto.x-=50;
-                int posicao = verificaPecaBranca(ponto);
-                if(posicao!=-1){
-                    apagaPecaBranca(posicao);
-                    jogador = 1;
-                    jLabel1.setText("jogador "+jogador);
-                    contClickP=0;
-                    ImageIcon ima = new ImageIcon(getClass().getResource("preta.PNG"));
-                    bt.setIcon(ima); 
-                    mudaLocalizacaoPreta();
-                }else
-                    JOptionPane.showMessageDialog(null,"jogada invalida"); 
-            }else if((ponto1.y==pontoAnte.y+50)&&(ponto1.x==pontoAnte.x+50 || ponto1.x==pontoAnte.x-50) && 0 != contClickP){
-                if(-1!=verificaPecaPreta(ponto1)){
-                    JOptionPane.showMessageDialog(null,"jogada invalida");
-                }else{
-                    contClickP=0;
-                    ImageIcon ima = new ImageIcon(getClass().getResource("preta.PNG"));
-                    bt.setIcon(ima);  
-                    jogador = 1;
-                    jLabel1.setText("jogador "+jogador);
-                    mudaLocalizacaoPreta();
-                }   
-            }else if(pontoAnte.y==ponto1.y &&  pontoAnte.x==ponto1.x){
-                contClickP=0; 
-                ImageIcon ima = new ImageIcon(getClass().getResource("preta.PNG"));
-                bt.setIcon(ima);
+    public void ActionPerformed(java.awt.event.ActionEvent evt) {
+        JButton bt=(JButton)evt.getSource();
+        Localizacao  loca = new Localizacao();
+        System.out.println("X: "+bt.getX()+"  Y: "+bt.getY());
+        ponto=bt.getLocation();
+        if((ponto.x==ponto.y || ponto.y==ponto.x-100 || ponto.x==ponto.y-100 || ponto.x==ponto.y-200 || ponto.y==ponto.x-200 || ponto.x==ponto.y-300 || ponto.y==ponto.x-300) && ponto.x<400){
+            switch(jogador){
+                case 0:
+                    //pecas.add(bt);
+                    loca.coorde = bt.getLocation();
+                    loca.peca = bt;
+                    loc.add(loca);
+                    jogardorBranco(bt);
+                    break;
+                case 1:
+                   // pecas.add(bt);
+                    loca.coorde = bt.getLocation();
+                    loca.peca = bt;
+                    loc.add(loca);
+                    jogardorPreto(bt);
+                    break;
             }
         }
+        
     }
-    public void jogadorBranco(JButton bt){
-        if((ponto1.x==ponto1.y || ponto1.y==ponto1.x-100 || ponto1.x==ponto1.y-100 || ponto1.x==ponto1.y-200 || ponto1.y==ponto1.x-200 || ponto1.x==ponto1.y-300 || ponto1.y==ponto1.x-300)){
-            if(contClickB==0 && -1!=verificaPecaBranca(ponto1)){
-                bt.setIcon(new javax.swing.ImageIcon(getClass().getResource("")));  
-                contClickB++;
-                pontoAnte.y=ponto1.y;
-                pontoAnte.x=ponto1.x;
-            }else if((ponto1.y==pontoAnte.y-50)&&(ponto1.x==pontoAnte.x-50 || ponto1.x==pontoAnte.x+50) && contClickB != 0){
-                if(-1!=verificaPecaBranca(ponto1)){
-                    JOptionPane.showMessageDialog(null,"jogada invalida");
-                }
-                else{
-                    ImageIcon ima = new ImageIcon(getClass().getResource("branca.PNG"));
-                    bt.setIcon(ima);
-                    jogador = 2;
-                    jLabel1.setText("jogador "+jogador);
-                    contClickB=0;
-                    mudaLocalizacaoBranca();
-                }
-            }else if(pontoAnte.y==ponto1.y &&  pontoAnte.x==ponto1.x && -1!=verificaPecaBranca(ponto1) && contClickB != 0){
-                contClickB=0; 
-                ImageIcon ima = new ImageIcon(getClass().getResource("branca.PNG"));
-                bt.setIcon(ima);
+    
+    private void jogardorBranco(JButton bt){
+        Point auxLoc =bt.getLocation();
+        int retorno=verificaPecaBranca(auxLoc);
+        int retornoP =verificaPecaPreta(auxLoc);
+        if(retornoP != -1 && click !=0){
+            JOptionPane.showMessageDialog(null,"jogada invalida");
+            loc.clear();
+            click=0;
+        }else if(click == 0 && retorno!=-1){
+            locaAnterior = bt.getLocation();
+            retornoAnt=retorno;
+            click++;
+        }else if(click != 0 && locaAnterior.y-50 == bt.getY() && (locaAnterior.x+50 == bt.getX() || locaAnterior.x-50 == bt.getX())){
+             if(retorno == -1){
+                 posicaoBranca(retornoAnt);
+                 loc.clear();
+                 click=0;
+                 jogador=1;
+             }else{
+                 JOptionPane.showMessageDialog(null,"jogada invalida");
+                 loc.clear();
+                 click=0;
+             }
+        }else if(click != 0 && locaAnterior.y-100 == bt.getY() && locaAnterior.x+100 == bt.getX()){
+            Point veri;
+            veri=locaAnterior;
+            veri.y-=50;
+            veri.x+=50;
+            int retotnoP = verificaPecaPreta(veri);
+            veri.y+=50;
+            veri.x-=50;
+           if(retotnoP != -1){
+                comerPreta(veri,retotnoP,retorno);
+                loc.clear();
+                click=0;
+                jogador=1;
+            }else{
+                JOptionPane.showMessageDialog(null,"jogada invalida");
+                 loc.clear();
+                 click=0;
             }
-        }  
-    }
-    public int verificaPecaBranca(Point veri){
-       for(int i=0;i<pecaBrancas.size();i++){
-            if( true ==pecaBrancas.get(i).equals(veri)){
-                return i;
+        }else if(click != 0 && locaAnterior.y-100 == bt.getY() && locaAnterior.x-100 == bt.getX()){
+            Point veri;
+            veri=locaAnterior;
+            veri.y-=50;
+            veri.x-=50;
+            int retotnoP = verificaPecaPreta(veri);
+            veri.y+=50;
+            veri.x+=50;
+            if(retotnoP != -1){
+                comerPreta(veri,retotnoP,retorno);
+                loc.clear();
+                click=0;
+                jogador=1;
+            }else{
+                JOptionPane.showMessageDialog(null,"jogada invalida");
+                 loc.clear();
+                 click=0;
             }
+        }else{
+            JOptionPane.showMessageDialog(null,"jogada invalida");
+            loc.clear();
+            click=0;
         }
-        return -1;
+        //( || locaAnterior.x-100 == bt.getX())
     }
-    public int verificaPecaPreta(Point veri){
-       for(int i=0;i<pecaPretas.size();i++){
-            if( true ==pecaPretas.get(i).equals(veri)){
-                return i;
-            }
-        }
-        return -1;
-    }
-    public void mudaLocalizacaoBranca(){
+    private int verificaPecaBranca(Point bt) {
         for(int i=0;i<pecaBrancas.size();i++){
-            if( true ==pontoAnte.equals(pecaBrancas.get(i))){
-                pecaBrancas.remove(i);
-                pecaBrancas.add(new Point(ponto1));
+            if(pecaBrancas.get(i).equals(bt)){
+                return i;
             }
-        }   
+        }
+        return -1;
     }
-    public void mudaLocalizacaoPreta(){
-        for(int i=0;i<pecaPretas.size();i++){
-            if( true == pontoAnte.equals(pecaPretas.get(i))){
-                pecaPretas.remove(i);
-                pecaPretas.add(new Point(ponto1));
+    private void posicaoBranca(/*JButton bt,*/ int retorno) {
+        for(int i = 0;i<loc.size();i++){
+            if( true == locaAnterior.equals(loc.get(i).coorde)){
+                loc.get(i).peca.setIcon(imaV);
+                pecaBrancas.remove(retorno);
+            }
+            if( true == ponto.equals(loc.get(i).coorde)){
+                loc.get(i).peca.setIcon(imaB);
+                pecaBrancas.add(new Point(ponto));
             }
         }
     }
-    public void apagaPecaBranca(int posicao){
-       for (int i=0; i<loc.size();i++){
-           if(true == loc.get(i).ponto.equals(pecaBrancas.get(posicao))){
-              ImageIcon ima = new ImageIcon(getClass().getResource(""));
-              loc.get(i).peca.setIcon(ima);
-           }
-       }
-       pecaBrancas.remove(posicao);
-       if(pecaBrancas.size() == 0){
-           JOptionPane.showMessageDialog(null,"jogador "+jogador+" ganhou!");
-       }
+    private void comerBranca(Point bt,int posicao,int retornop){
+        for(int i = 0;i<pecas.size();i++){    
+            if( true == bt.equals(pecas.get(i).getLocation())){
+                pecas.get(i).setIcon(imaV);
+                pecaPretas.remove(retornop);
+            }
+            if(true == pecaBrancas.get(posicao).equals(pecas.get(i).getLocation())){
+                pecas.get(i).setIcon(imaV);
+                pecaBrancas.remove(posicao);
+            }
+            if(true == pecas.get(i).getLocation().equals(ponto)){
+                pecas.get(i).setIcon(imaP);
+                pecaPretas.add(new Point (ponto));
+            }
+            
+        }
     }
-    public void apagaPecaPreta(int posicao){
-        for (int i=0; i<loc.size();i++){
-           if(true == loc.get(i).ponto.equals(pecaPretas.get(posicao))){
-              ImageIcon ima = new ImageIcon(getClass().getResource(""));
-              loc.get(i).peca.setIcon(ima);
-           }
-       }
-       pecaPretas.remove(posicao);
-       if(pecaPretas.size() ==0){
-           JOptionPane.showMessageDialog(null,"jogador "+jogador+" ganhou!");
-       }
+    
+    private void jogardorPreto(JButton bt){
+        Point auxLoc =bt.getLocation();
+        int retorno=verificaPecaBranca(auxLoc);
+        int retornoP =verificaPecaPreta(auxLoc);
+        if(retorno != -1 && click !=0){
+            JOptionPane.showMessageDialog(null,"jogada invalida");
+            loc.clear();
+            click=0;
+        }else if(click == 0 && retornoP!=-1){
+            locaAnterior = bt.getLocation();
+            retornoAnt=retornoP;
+            click++;
+        }else if(click != 0 && locaAnterior.y+50 == bt.getY() && (locaAnterior.x+50 == bt.getX() || locaAnterior.x-50 == bt.getX())){
+             if(retornoP == -1){
+                 posicaoPreta(retornoAnt);
+                 loc.clear();
+                 click=0;
+                 jogador=0;
+             }else{
+                 JOptionPane.showMessageDialog(null,"jogada invalida");
+                 loc.clear();
+                 click=0;
+             }
+        }else if(click != 0 && locaAnterior.y+100 == bt.getY() && locaAnterior.x+100 == bt.getX()){
+            Point veri;
+            veri=locaAnterior;
+            veri.y+=50;
+            veri.x+=50;
+            int retotnoB = verificaPecaBranca(veri);
+            veri.y-=50;
+            veri.x-=50;
+           if(retotnoB != -1){
+                comerBranca(veri,retotnoB,retornoAnt);
+                loc.clear();
+                click=0;
+                jogador=0;
+            }else{
+                JOptionPane.showMessageDialog(null,"jogada invalida");
+                 loc.clear();
+                 click=0;
+            }
+        }else if(click != 0 && locaAnterior.y+100 == bt.getY() && locaAnterior.x-100 == bt.getX()){
+            Point veri;
+            veri=locaAnterior;
+            veri.y+=50;
+            veri.x-=50;
+            int retotnoB = verificaPecaBranca(veri);
+            veri.y-=50;
+            veri.x+=50;
+            if(retotnoB != -1){
+                comerBranca(veri,retotnoB,retornoAnt);
+                loc.clear();
+                click=0;
+                jogador=0;
+            }else{
+                JOptionPane.showMessageDialog(null,"jogada invalida");
+                 loc.clear();
+                 click=0;
+            }
+        }else{
+            JOptionPane.showMessageDialog(null,"jogada invalida");
+            loc.clear();
+            click=0;
+        }
+        //( || locaAnterior.x-100 == bt.getX())
+    }
+    private int verificaPecaPreta(Point bt) {
+        for(int i=0;i<pecaPretas.size();i++){
+            if(pecaPretas.get(i).equals(bt)){
+                return i;
+            }
+        }
+        return -1;
+    }
+    private void posicaoPreta(/*JButton bt,*/ int retorno) {
+        for(int i = 0;i<loc.size();i++){
+            if( true == locaAnterior.equals(loc.get(i).coorde)){
+                loc.get(i).peca.setIcon(imaV);
+                pecaPretas.remove(retorno);
+            }
+            if( true == ponto.equals(loc.get(i).coorde)){
+                loc.get(i).peca.setIcon(imaP);
+                pecaPretas.add(new Point(ponto));
+            }
+        }
+    }
+    private void comerPreta(Point bt,int posicao,int retorno){
+        for(int i = 0;i<pecas.size();i++){    
+            if( true == bt.equals(pecas.get(i).getLocation())){
+                pecas.get(i).setIcon(imaV);
+                pecaBrancas.remove(retorno);
+            }
+            if(true == pecaBrancas.get(posicao).equals(pecas.get(i).getLocation())){
+                pecas.get(i).setIcon(imaV);
+                pecaPretas.remove(posicao);
+            }
+            if(true == pecas.get(i).getLocation().equals(ponto)){
+                pecas.get(i).setIcon(imaB);
+                pecaBrancas.add(new Point (ponto));
+            }
+            
+        }
     }
     
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
      * regenerated by the Form Editor.
-     * 
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-
-        jButton1.setText("jButton1");
-
-        setBackground(new java.awt.Color(0, 0, 0));
+        setBackground(new java.awt.Color(255, 51, 255));
         setMaximumSize(new java.awt.Dimension(400, 400));
         setMinimumSize(new java.awt.Dimension(400, 400));
-        setPreferredSize(new java.awt.Dimension(400, 100));
         setLayout(null);
-
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 0, 102));
-        jLabel1.setText("jogador 1");
-        add(jLabel1);
-        jLabel1.setBounds(460, 170, 76, 22);
-
-        jTextField1.setText("nome jogador 1");
-        add(jTextField1);
-        jTextField1.setBounds(450, 280, 120, 30);
-
-        jTextField3.setText("nome jogador 2");
-        add(jTextField3);
-        jTextField3.setBounds(450, 30, 120, 30);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void add(ArrayList<JButton> pecas) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
+
+    
+
+    
+
+    
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables
 }

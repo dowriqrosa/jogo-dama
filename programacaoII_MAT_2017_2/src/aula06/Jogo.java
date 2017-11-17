@@ -5,11 +5,12 @@
  */
 package aula06;
 
+import java.awt.Color;
 import javax.swing.JPanel;
 
 /**
  *
- * @author Dowriqrosa
+ * @author Pedro Kislansky
  */
 public class Jogo extends javax.swing.JFrame {
 
@@ -25,7 +26,8 @@ public class Jogo extends javax.swing.JFrame {
     private void posicionarTabuleiro() {
         tabuleiro=new Tabuleiro();
         this.getContentPane().add(tabuleiro);
-        tabuleiro.setBounds(0, 0, 700, 400); 
+        tabuleiro.setBounds(0, 0, 400, 400);
+        tabuleiro.setBackground(Color.black);
     }
     /**
      * This method is called from within the constructor to initialize the form.

@@ -10,9 +10,9 @@ import javax.swing.JButton;
 
 /**
  *
- * @author dowriq
+ * @author carlo
  */
 public class Localizacao {
-    Point ponto;
     JButton peca;
+    Point coorde;
 }
